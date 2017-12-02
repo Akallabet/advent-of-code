@@ -1,7 +1,7 @@
 {
   "name": "advent-of-code",
   "version": "1.0.0",
-  "description": "Advent of code 2017",
+  "description": "Advent of code 2017 - javascript",
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint .",
@@ -20,5 +20,12 @@
     "eslint-plugin-jest": "^21.3.2",
     "jest": "^21.2.1",
     "standard": "^10.0.3"
-  }
+  },
+  "keywords": [
+    "advent of code",
+    "2017",
+    "advent of code 2017",
+    "javascript",
+    "es6"
+  ]
 }

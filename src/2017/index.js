@@ -1,5 +1,7 @@
 import inverseCaptcha from './1/inverse-captcha.js'
+import corruptionChecksum from './2/corruption-checksum.js'
 
 export {
-  inverseCaptcha
+  inverseCaptcha,
+  corruptionChecksum
 }
