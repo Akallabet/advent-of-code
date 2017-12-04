@@ -1,4 +1,4 @@
-import spiralMemory from './spiral-memory.js'
+import spiralMemory from './part-1.js'
 
 describe('Day 3 - Spiral Memory', () => {
   it('exercise input', () => {
