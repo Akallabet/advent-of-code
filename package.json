@@ -1,5 +1,5 @@
 {
-  "name": "advent-of-code",
+  "name": "advent-of-code-2017",
   "version": "1.0.0",
   "description": "Advent of code 2017 - javascript",
   "main": "src/index.js",
@@ -8,7 +8,7 @@
     "lint-fix": "eslint . --fix",
     "test": "jest --no-cache --watch ./*"
   },
-  "author": "Akallabeth",
+  "author": "Akallabet",
   "license": "ISC",
   "devDependencies": {
     "babel-jest": "^21.2.0",
