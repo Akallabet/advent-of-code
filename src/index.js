@@ -1,5 +1,3 @@
-import '2017' from './2017'
-
-export {
-  2017
+module.exports = {
+  AoC2018: require('./2018')
 }
