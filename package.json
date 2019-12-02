@@ -11,20 +11,19 @@
   "author": "Akallabet",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.1.6",
-    "@babel/preset-env": "^7.1.6",
-    "babel-jest": "^23.6.0",
-    "babel-preset-env": "^1.7.0",
-    "eslint": "^5.9.0",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-jest": "^23.6.0",
-    "jest": "^23.6.0",
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "babel-jest": "^24.9.0",
+    "eslint": "^6.7.2",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-jest": "^23.1.1",
+    "jest": "^24.9.0",
     "path": "^0.12.7",
-    "standard": "^12.0.1"
+    "standard": "^14.3.1"
   },
   "jest": {
     "testMatch": [
-      "**/__tests__/**/*.js?(x)"
+      "**/src/**/*.test.js"
     ]
   },
   "keywords": [
