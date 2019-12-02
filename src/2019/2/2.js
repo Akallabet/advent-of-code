@@ -1,34 +1,29 @@
-const intCode = ({ inputs, noun, verb}) => {
-  const values = inputs.map((val, i) => (i === 1 && noun) || (i === 2 && verb) || val)
-  let index = 0
-  let halt = false
+const getInputs = input => input.split(',').map(i => parseInt(i))
+const add = (a, b) => a + b
+const multiply = (a, b) => a * b
 
-  while (!halt) {
-    const opCode = values[index]
-    if (opCode === 99) halt = true
-    else {
-      const parameters = [values[index + 1], values[index + 2], values[index + 3]]
-      if (opCode === 1) {
-        values[parameters[2]] = values[parameters[0]] + values[parameters[1]]
-      } else if (opCode === 2) {
-        values[parameters[2]] = values[parameters[0]] * values[parameters[1]]
-      }
-    }
+const intCode = ({ values, noun, verb }) => {
+  values[1] = noun
+  values[2] = verb
+  let index = 0
+  let op = () => {}
+
+  while (op) {
+    op = (values[index] === 1 && add) || (values[index] === 2 && multiply) || undefined
+    if (op) values[values[index + 3]] = op(values[values[index + 1]], values[values[index + 2]])
     index += 4
-    if (index >= values.length - 1) halt = true
   }
   return values[0]
 }
 
-export const part1 = (inputs) => {
-  return intCode({ inputs, noun: 12, verb: 2 })
-}
+export const part1 = (input) => intCode({ values: getInputs(input), noun: 12, verb: 2 })
 
-export const part2 = (inputs) => {
+export const part2 = (input) => {
+  const values = getInputs(input)
   let res = 0
   for (let noun = 0; noun < 100; noun++) {
     for (let verb = 0; verb < 100; verb++) {
-      const calc = intCode({ inputs, noun, verb })
+      const calc = intCode({ values: [...values], noun, verb })
       if (calc === 19690720) {
         res = `${noun}${verb}`
         break
