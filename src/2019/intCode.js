@@ -3,6 +3,7 @@ export default ({ program, input, noun, verb }) => {
     program[1] = noun
     program[2] = verb
   }
+  if (input && !input.length) input = [input]
   const outputs = []
   let pos = 0
   let halt = false
@@ -24,7 +25,7 @@ export default ({ program, input, noun, verb }) => {
       program[par3] = useMode(mode1, par1) * useMode(mode2, par2)
       pos += 4
     } else if (opcode === 3) {
-      program[par1] = input
+      program[par1] = input.pop()
       pos += 2
     } else if (opcode === 4) {
       outputs.push(useMode(mode1, par1))
