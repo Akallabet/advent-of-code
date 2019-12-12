@@ -1,38 +1,37 @@
 import intCode from '../intCode'
 
-const createPhaseSettingsCombinations = (n = 0, phases = [0, 1, 2, 3, 4], permutations = []) => {
-  // const permutations = []
-  if (n === phases.length) return permutations
-  const moving = phases.slice(1)
-  // console.log(phases, moving)
-  for (let i = 0; i < moving.length; i++) {
-    permutations.push([phases[0], ...moving])
-    // const el = [
-    //   phases[0],
-    //   ...moving.slice(i + 1, phases.length),
-    //   moving[i]
-    // ]
-    const el = moving.shift()
-    moving.push(el)
-    // permutations.push([phases[0], ...moving])
-    // console.log(el)
+const calcPermutations = (phases, n = 0, permutations = []) => {
+  if (n === phases.length - 1) {
+    permutations.push(phases)
+  } else {
+    // console.log(phases, n)
+    calcPermutations(phases, n + 1, permutations)
+    for (let i = n; i < phases.length - 1; i++) {
+      const initial = phases.slice(0, n)
+      const last = phases[i]
+      const middle = phases.slice(i + 1)
+      // const el = [
+      //   ...initial,
+      //   ...middle,
+      //   last
+      // ]
+      console.log(phases, `Current index ${n}`, `i => ${i}`)
+      console.log(initial, middle, last)
+      // calcPermutations(
+      //   el,
+      //   n + 1,
+      //   permutations
+      // )
+    }
   }
-
-  return createPhaseSettingsCombinations(
-    n + 1,
-    [...phases.slice(1, phases.length), phases[0]],
-    permutations
-  )
-
-  // console.log(permutations)
+  return permutations
 }
 
 export const part1 = (inputValues) => {
   const program = inputValues.split(',').map(i => parseInt(i))
-  const phaseSettings = createPhaseSettingsCombinations()
+  const phaseSettings = calcPermutations([1, 2, 3, 4])
 
   console.log(phaseSettings)
-
   // return Math.max(...phaseSettings.map(phaseSetting => phaseSetting.reduce((input, phase) => {
   //   return intCode({ program, input: [input, phase] })
   // }, 0)))
