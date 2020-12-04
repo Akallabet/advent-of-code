@@ -1,4 +1,4 @@
-import { part1 } from './4'
+import { part1, part2 } from './4'
 import input from './input.js'
 
 const example = `ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
@@ -21,5 +21,9 @@ describe('Day 4: Password Processing', () => {
   })
   it('Part 1', () => {
     expect(part1(input.split('\n'))).toEqual(239)
+  })
+
+  it('Part 2', () => {
+    expect(part2(input.split('\n'))).toEqual(188)
   })
 })
