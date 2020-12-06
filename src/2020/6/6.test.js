@@ -1,4 +1,4 @@
-import { part1 } from './6'
+import { part1, part2 } from './6'
 import input from './input'
 
 const example = `abc
@@ -23,5 +23,11 @@ describe('Day 6: Custom Customs', () => {
   })
   it('Part 1', () => {
     expect(part1(input.split('\n'))).toEqual(6259)
+  })
+  it('Part 2 - Example', () => {
+    expect(part2(example.split('\n'))).toEqual(6)
+  })
+  it('Part 2', () => {
+    expect(part2(input.split('\n'))).toEqual(3178)
   })
 })
