@@ -1,4 +1,4 @@
-import { part1 } from './7'
+import { part1, part2 } from './7'
 import input from './input'
 
 const example = `light red bags contain 1 bright white bag, 2 muted yellow bags.
@@ -17,5 +17,11 @@ describe('Day 7: Handy Haversacks', () => {
   })
   it('Part 1', () => {
     expect(part1(input.split('\n'))).toEqual(112)
+  })
+  it('Part 2 - Example', () => {
+    expect(part2(example.split('\n'))).toEqual(32)
+  })
+  it('Part 2', () => {
+    expect(part2(input.split('\n'))).toEqual(6260)
   })
 })
