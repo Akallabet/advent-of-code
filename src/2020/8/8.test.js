@@ -1,4 +1,4 @@
-import { part1 } from './8'
+import { part1, part2 } from './8'
 import input from './input'
 
 const example = `nop +0
@@ -16,12 +16,12 @@ describe('Day 8: Handheld Halting', () => {
     expect(part1(example.split('\n'))).toEqual(5)
   })
   it('Part 1', () => {
-    expect(part1(input.split('\n'))).toEqual(5)
+    expect(part1(input.split('\n'))).toEqual(1553)
   })
-  // it('Part 2 - Example', () => {
-  //   expect(part2(example.split('\n'))).toEqual(32)
-  // })
-  // it('Part 2', () => {
-  //   expect(part2(input.split('\n'))).toEqual(6260)
-  // })
+  it('Part 2 - Example', () => {
+    expect(part2(example.split('\n'))).toEqual(8)
+  })
+  it('Part 2', () => {
+    expect(part2(input.split('\n'))).toEqual(1877)
+  })
 })
