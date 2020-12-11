@@ -1,4 +1,4 @@
-import { part1 } from './10'
+import { part1, part2 } from './10'
 import input from './input'
 
 const example = `16
@@ -53,10 +53,11 @@ describe('Day 10: Adapter Array', () => {
   it('Part 1', () => {
     expect(part1(input.split('\n'))).toEqual(2201)
   })
-  // it('Part 2 - Example', () => {
-  //   expect(part2(example.split('\n'), 5)).toEqual(62)
-  // })
-  // it('Part 2', () => {
-  //   expect(part2(input.split('\n'), 25)).toEqual(2986195)
-  // })
+  it.only('Part 2 - Example', () => {
+    expect(part2(example.split('\n'))).toEqual(8)
+    // expect(part2(example2.split('\n'))).toEqual(19208)
+  })
+  it('Part 2', () => {
+    expect(part2(input.split('\n'))).toEqual(2986195)
+  })
 })

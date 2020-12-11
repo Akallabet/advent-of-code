@@ -9,4 +9,17 @@ export const part1 = (values) => {
   }
   return differences[1] * differences[3]
 }
-export const part2 = (values) => {}
+export const part2 = (values) => {
+  const numbers = values.map(n => Number(n)).sort((a, b) => a - b)
+
+  const data = numbers.reduce((possibilities, number) => {
+    // possibilities[number] = 0
+    possibilities[number] = (possibilities[number - 1] || 0) + (possibilities[number - 2] || 0) + (possibilities[number - 3] || 0)
+    console.log(number, possibilities)
+    return possibilities
+  }, [1])
+
+  // console.log(data)
+
+  return data[data.length - 1]
+}
