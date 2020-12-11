@@ -53,11 +53,11 @@ describe('Day 10: Adapter Array', () => {
   it('Part 1', () => {
     expect(part1(input.split('\n'))).toEqual(2201)
   })
-  it.only('Part 2 - Example', () => {
+  it('Part 2 - Example', () => {
     expect(part2(example.split('\n'))).toEqual(8)
-    // expect(part2(example2.split('\n'))).toEqual(19208)
+    expect(part2(example2.split('\n'))).toEqual(19208)
   })
   it('Part 2', () => {
-    expect(part2(input.split('\n'))).toEqual(2986195)
+    expect(part2(input.split('\n'))).toEqual(169255295254528)
   })
 })

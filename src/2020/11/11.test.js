@@ -1,4 +1,4 @@
-import { part1 } from './11'
+import { part1, part2 } from './11'
 import input from './input'
 
 const example = `L.LL.LL.LL
@@ -19,7 +19,10 @@ describe('Day 11: Seating System', () => {
   it('Part 1', () => {
     expect(part1(input.split('\n'))).toEqual(2472)
   })
-  // it('Part 2', () => {
-  //   expect(part2(input.split('\n'))).toEqual(2986195)
-  // })
+  it('Part 2 - Example', () => {
+    expect(part2(example.split('\n'))).toEqual(26)
+  })
+  it('Part 2', () => {
+    expect(part2(input.split('\n'))).toEqual(26)
+  })
 })

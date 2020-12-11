@@ -1,5 +1,35 @@
-const getNewConfiguration = (seats, initialOccupied) => {
-  const totalAdjacents = (i, j) => {
+const getNewConfiguration = (seats, initialOccupied, firstAvailable) => {
+  const newIndex = (i, j, direction) => {
+    if (direction === 'top-left') return [i - 1, j - 1]
+    if (direction === 'top') return [i - 1, j]
+    if (direction === 'top-right') return [i - 1, j + 1]
+    if (direction === 'right') return [i, j + 1]
+    if (direction === 'bottom-right') return [i + 1, j + 1]
+    if (direction === 'bottom') return [i + 1, j]
+    if (direction === 'bottom-left') return [i + 1, j - 1]
+    if (direction === 'left') return [i, j - 1]
+  }
+
+  const loopThrough = (i, j, direction) => {
+    if (!seats[i]) return ''
+    if (!seats[i][j]) return ''
+    if (seats[i][j] !== '.') return seats[i][j]
+    return loopThrough(...newIndex(i, j, direction), direction)
+  }
+  const findFirstAvailable = (i, j) => {
+    let count = 0
+    if (loopThrough(i - 1, j - 1, 'top-left') === '#') count += 1
+    if (loopThrough(i - 1, j, 'top') === '#') count += 1
+    if (loopThrough(i - 1, j + 1, 'top-right') === '#') count += 1
+    if (loopThrough(i, j + 1, 'right') === '#') count += 1
+    if (loopThrough(i + 1, j + 1, 'bottom-right') === '#') count += 1
+    if (loopThrough(i + 1, j, 'bottom') === '#') count += 1
+    if (loopThrough(i + 1, j - 1, 'bottom-left') === '#') count += 1
+    if (loopThrough(i, j - 1, 'left') === '#') count += 1
+    return count
+  }
+
+  const firstAdjacent = (i, j) => {
     const symbol = '#'
     let count = 0
     if (seats[i - 1]) {
@@ -14,11 +44,11 @@ const getNewConfiguration = (seats, initialOccupied) => {
     }
     if (seats[i][j - 1] === symbol) count += 1
     if (seats[i][j + 1] === symbol) count += 1
-    // if (i === 0 && j === 8) {
-    //   console.log(seats[i + 1][j - 1], seats[i + 1][j], seats[i + 1][j + 1])
-    //   console.log(seats[i][j - 1], seats[i][j + 1], seats[i][j + 1])
-    // }
     return count
+  }
+
+  const totalAdjacents = (i, j) => {
+    return firstAvailable ? findFirstAvailable(i, j) : firstAdjacent(i, j)
   }
 
   let occupied = 0
@@ -31,7 +61,7 @@ const getNewConfiguration = (seats, initialOccupied) => {
       return 'L'
     }
     if (space === '#') {
-      if (totalAdjacents(i, j) >= 4) {
+      if (totalAdjacents(i, j) >= (firstAvailable ? 5 : 4)) {
         return 'L'
       }
       occupied += 1
@@ -47,21 +77,21 @@ const getNewConfiguration = (seats, initialOccupied) => {
   }
 }
 
-export const part1 = (values) => {
+const gameOfLife = (seats, firstAvailable) => {
   let occupied = 0
-  let seats = values.map((row) => row.split(''))
   let finish = false
-  // let count = 0
   while (!finish) {
-    // console.log('iteration', count)
-    const configuration = getNewConfiguration(seats, occupied)
+    const configuration = getNewConfiguration(seats, occupied, firstAvailable)
     finish = configuration.isFinished
     occupied = configuration.occupied
     seats = configuration.seats
-    // count += 1
-    // console.log(configuration.seats.map(row => row.join('')).join('\n'))
   }
-  // console.log(seats.map(row => row.join('')).join('\n'))
   return occupied
 }
-// export const part2 = (values) => {}
+
+export const part1 = (values) => {
+  return gameOfLife(values.map((row) => row.split('')))
+}
+export const part2 = (values) => {
+  return gameOfLife(values.map((row) => row.split('')), true)
+}

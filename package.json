@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "test-once": "jest"
   },
   "author": "Akallabet",
   "license": "ISC",
