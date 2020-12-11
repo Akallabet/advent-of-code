@@ -23,6 +23,6 @@ describe('Day 11: Seating System', () => {
     expect(part2(example.split('\n'))).toEqual(26)
   })
   it('Part 2', () => {
-    expect(part2(input.split('\n'))).toEqual(26)
+    expect(part2(input.split('\n'))).toEqual(2197)
   })
 })

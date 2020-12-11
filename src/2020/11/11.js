@@ -1,97 +1,50 @@
-const getNewConfiguration = (seats, initialOccupied, firstAvailable) => {
-  const newIndex = (i, j, direction) => {
-    if (direction === 'top-left') return [i - 1, j - 1]
-    if (direction === 'top') return [i - 1, j]
-    if (direction === 'top-right') return [i - 1, j + 1]
-    if (direction === 'right') return [i, j + 1]
-    if (direction === 'bottom-right') return [i + 1, j + 1]
-    if (direction === 'bottom') return [i + 1, j]
-    if (direction === 'bottom-left') return [i + 1, j - 1]
-    if (direction === 'left') return [i, j - 1]
-  }
-
-  const loopThrough = (i, j, direction) => {
-    if (!seats[i]) return ''
-    if (!seats[i][j]) return ''
+const gameOfLife = (seats, occupied = 0, firstAvailable, iteration = 0) => {
+  const loopThrough = (i, j, direction, limit, current = 1) => {
+    if (!seats[i] || !seats[i][j]) return ''
+    if (limit && limit === current) return seats[i][j]
     if (seats[i][j] !== '.') return seats[i][j]
-    return loopThrough(...newIndex(i, j, direction), direction)
+
+    return loopThrough(
+      direction[0] === 'top' ? i - 1 : direction[0] === 'bottom' ? i + 1 : i,
+      direction[1] === 'left' ? j - 1 : direction[1] === 'right' ? j + 1 : j,
+      direction, limit, current + 1
+    )
   }
-  const findFirstAvailable = (i, j) => {
+  const findFirstAvailable = (i, j, limit) => {
     let count = 0
-    if (loopThrough(i - 1, j - 1, 'top-left') === '#') count += 1
-    if (loopThrough(i - 1, j, 'top') === '#') count += 1
-    if (loopThrough(i - 1, j + 1, 'top-right') === '#') count += 1
-    if (loopThrough(i, j + 1, 'right') === '#') count += 1
-    if (loopThrough(i + 1, j + 1, 'bottom-right') === '#') count += 1
-    if (loopThrough(i + 1, j, 'bottom') === '#') count += 1
-    if (loopThrough(i + 1, j - 1, 'bottom-left') === '#') count += 1
-    if (loopThrough(i, j - 1, 'left') === '#') count += 1
+    if (loopThrough(i - 1, j - 1, ['top', 'left'], limit) === '#') count += 1
+    if (loopThrough(i - 1, j, ['top'], limit) === '#') count += 1
+    if (loopThrough(i - 1, j + 1, ['top', 'right'], limit) === '#') count += 1
+    if (loopThrough(i, j + 1, ['', 'right'], limit) === '#') count += 1
+    if (loopThrough(i + 1, j + 1, ['bottom', 'right'], limit) === '#') count += 1
+    if (loopThrough(i + 1, j, ['bottom'], limit) === '#') count += 1
+    if (loopThrough(i + 1, j - 1, ['bottom', 'left'], limit) === '#') count += 1
+    if (loopThrough(i, j - 1, ['', 'left'], limit) === '#') count += 1
     return count
   }
 
-  const firstAdjacent = (i, j) => {
-    const symbol = '#'
-    let count = 0
-    if (seats[i - 1]) {
-      if (seats[i - 1][j - 1] === symbol) count += 1
-      if (seats[i - 1][j] === symbol) count += 1
-      if (seats[i - 1][j + 1] === symbol) count += 1
-    }
-    if (seats[i + 1]) {
-      if (seats[i + 1][j + 1] === symbol) count += 1
-      if (seats[i + 1][j] === symbol) count += 1
-      if (seats[i + 1][j - 1] === symbol) count += 1
-    }
-    if (seats[i][j - 1] === symbol) count += 1
-    if (seats[i][j + 1] === symbol) count += 1
-    return count
-  }
-
-  const totalAdjacents = (i, j) => {
-    return firstAvailable ? findFirstAvailable(i, j) : firstAdjacent(i, j)
-  }
-
-  let occupied = 0
+  let newOccupied = 0
   const newConfiguration = seats.map((row, i) => row.map((space, j) => {
     if (space === 'L') {
-      if (totalAdjacents(i, j) === 0) {
-        occupied += 1
+      if (findFirstAvailable(i, j, firstAvailable ? 0 : 1) === 0) {
+        newOccupied += 1
         return '#'
       }
       return 'L'
     }
     if (space === '#') {
-      if (totalAdjacents(i, j) >= (firstAvailable ? 5 : 4)) {
+      if (findFirstAvailable(i, j, firstAvailable ? 0 : 1) >= (firstAvailable ? 5 : 4)) {
         return 'L'
       }
-      occupied += 1
+      newOccupied += 1
       return space
     }
     if (space === '.') return space
   }))
 
-  return {
-    occupied,
-    seats: newConfiguration,
-    isFinished: occupied === initialOccupied
-  }
+  if (occupied === newOccupied) return occupied
+  return gameOfLife(newConfiguration, newOccupied, firstAvailable, iteration + 1)
 }
 
-const gameOfLife = (seats, firstAvailable) => {
-  let occupied = 0
-  let finish = false
-  while (!finish) {
-    const configuration = getNewConfiguration(seats, occupied, firstAvailable)
-    finish = configuration.isFinished
-    occupied = configuration.occupied
-    seats = configuration.seats
-  }
-  return occupied
-}
-
-export const part1 = (values) => {
-  return gameOfLife(values.map((row) => row.split('')))
-}
-export const part2 = (values) => {
-  return gameOfLife(values.map((row) => row.split('')), true)
-}
+export const part1 = (values) => gameOfLife(values.map((row) => row.split('')))
+export const part2 = (values) => gameOfLife(values.map((row) => row.split('')), 0, true)
