@@ -14,10 +14,10 @@ describe('Day 12: Rain Risk', () => {
   it('Part 1', () => {
     expect(part1(input.split('\n'))).toEqual(439)
   })
-  // it('Part 2 - Example', () => {
-  //   expect(part2(example.split('\n'))).toEqual(26)
-  // })
-  // it('Part 2', () => {
-  //   expect(part2(input.split('\n'))).toEqual(2197)
-  // })
+  it('Part 2 - Example', () => {
+    expect(part2(example.split('\n'))).toEqual(286)
+  })
+  it('Part 2', () => {
+    expect(part2(input.split('\n'))).toEqual(12385)
+  })
 })

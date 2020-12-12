@@ -42,24 +42,36 @@ export const part1 = (values) => {
   let direction = 'E'
 
   values.map(instr => ({ move: instr[0], value: Number(instr.slice(1)) })).forEach(({ move, value }) => {
-    // console.log('before', axis)
-    // console.log(move, value)
     if (directions[move]) {
-      // console.log(`(${move}${value}) - move ${move} for ${value}`)
-      // console.log(directions[move])
       axis[directions[move].ax] += value * directions[move].value
     } else if (move === 'F') {
-      // console.log(`(${move}${value}) - move forward towards ${points[point]} for ${value}`)
       axis[directions[direction].ax] += value * directions[direction].value
     } else {
-      // turn(move, value / 90)
       direction = directions[direction].move(move === 'R')[value]
-      // console.log(`(${move}${value}) - new direction is ${direction}`)
     }
-    // console.log(axis)
   })
-  // console.log(axis)
   return Math.abs(axis.lat) + Math.abs(axis.long)
 }
 
-export const part2 = (values) => {}
+const rotate = isRight => ({ long, lat }) => ({
+  90: isRight ? { long: lat, lat: 0 - long } : { lat: long, long: 0 - lat },
+  180: { long: 0 - long, lat: 0 - lat },
+  270: isRight ? { lat: long, long: 0 - lat } : { long: lat, lat: 0 - long }
+})
+
+export const part2 = (values) => {
+  const axis = { long: 0, lat: 0 }
+  let waypoint = { long: 10, lat: 1 }
+
+  values.map(instr => ({ move: instr[0], value: Number(instr.slice(1)) })).forEach(({ move, value }) => {
+    if (directions[move]) {
+      waypoint[directions[move].ax] += value * directions[move].value
+    } else if (move === 'F') {
+      axis.long += value * waypoint.long
+      axis.lat += value * waypoint.lat
+    } else {
+      waypoint = rotate(move === 'R')(waypoint)[value]
+    }
+  })
+  return Math.abs(axis.lat) + Math.abs(axis.long)
+}
