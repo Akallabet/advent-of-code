@@ -1,4 +1,4 @@
-import { part1 } from './14'
+import { part1, part2 } from './14'
 import input from './input'
 
 const example = `mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
@@ -12,5 +12,8 @@ describe('Day 14: Docking Data', () => {
   })
   test('Part 1', () => {
     expect(part1(input.split('\n'))).toBe(6386593869035)
+  })
+  test.skip('Part 2 - Example', () => {
+    expect(part2(example.split('\n'))).toBe(208)
   })
 })
