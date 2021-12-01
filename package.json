@@ -15,11 +15,14 @@
     "@babel/core": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
     "babel-jest": "^24.9.0",
-    "eslint": "^6.7.2",
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-jest": "^23.1.1",
+    "eslint-plugin-prettier": "^4.0.0",
     "jest": "^24.9.0",
     "path": "^0.12.7",
+    "prettier": "^2.5.0",
     "standard": "^14.3.1"
   },
   "jest": {
@@ -33,5 +36,8 @@
     "advent of code 2018",
     "javascript",
     "es6"
-  ]
+  ],
+  "dependencies": {
+    "ramda": "^0.27.1"
+  }
 }

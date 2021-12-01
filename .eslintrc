@@ -1,6 +1,6 @@
 {
-  "extends": "standard",
-  "plugins": ["jest"],
+  "extends": ["standard", "prettier"],
+  "plugins": ["jest", "prettier"],
   "root": true,
   "env": {
     "jest/globals": true
