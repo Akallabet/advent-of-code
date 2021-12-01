@@ -1,16 +1,14 @@
-import { addIndex, map, pipe, sum } from 'ramda';
+import { pipe, sum } from 'ramda';
 
-const mapWithMeasurements = (predicate) => (measurements) =>
-  addIndex(map)(predicate(measurements), measurements);
+const totalIncrements = (measurements) =>
+  measurements.reduce(
+    (incr, measurement, i) => incr + (i > 0 && (measurements[i - 1] < measurement ? 1 : 0)) || 0,
+    0
+  );
 
-const isMeasureIncremented = (measurements) => (measurement, i) =>
-  (measurements[i - 1] || 0) < measurement;
+export const part1 = totalIncrements;
 
-const previousThreeMeasurements = (measurements) => (_, i) =>
-  (measurements[i - 1] || 0) + (measurements[i - 2] || 0) + measurements[i - 3] || 0;
-
-const removeFirst = ([_, ...data]) => data;
-
-export const part1 = pipe(mapWithMeasurements(isMeasureIncremented), removeFirst, sum);
-
-export const part2 = pipe(mapWithMeasurements(previousThreeMeasurements), part1);
+export const part2 = pipe(
+  (measurements) => measurements.map((_, i) => sum(measurements.slice(i - 3, i))),
+  totalIncrements
+);
