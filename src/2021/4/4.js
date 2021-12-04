@@ -23,11 +23,6 @@ const hasOneCompleteRow = ([row, ...rows]) => {
   return hasOneCompleteRow(rows);
 };
 
-const checkForWinner = ([board, ...boards]) => {
-  if (!board) return false;
-  if (hasOneCompleteRow(board) || hasOneCompleteRow(transpose(board))) return board;
-  return checkForWinner(boards);
-};
 const markDrawnNumber = (draw) => map(map(map((n) => (n === draw ? 'mark' : n))));
 
 const getSumOfUnmarkedNumbers = pipe(
@@ -40,15 +35,24 @@ const getSumOfUnmarkedNumbers = pipe(
   sum
 );
 
-const playBingo = ([[draw, ...draws], boards]) => {
+const isWinnerBoard = (board) => hasOneCompleteRow(board) || hasOneCompleteRow(transpose(board));
+const isNotWinnerBoard = (board) => !isWinnerBoard(board);
+
+const playBingo = ([boards, [draw, ...draws]], limit) => {
   const markedBoards = markDrawnNumber(draw)(boards);
-  const winner = checkForWinner(markedBoards);
-  if (winner) return [draw, winner];
-  if (draws.length === 0) return false;
-  return playBingo([draws, markedBoards]);
+  const winners = filter(isWinnerBoard, markedBoards);
+  const lastWinner = winners[winners.length - 1];
+  const newBoards = filter(isNotWinnerBoard, markedBoards);
+
+  if (newBoards.length === limit) return [lastWinner, draw];
+  return playBingo([newBoards, draws], limit);
 };
 
-const buildBingo = ([draws, ...lines]) => [map(Number, split(',', draws)), buildBingoBoards(lines)];
-const calcFinalScore = ([draw, winner]) => draw * getSumOfUnmarkedNumbers(winner);
+const buildBingo = ([draws, ...lines]) => [buildBingoBoards(lines), map(Number, split(',', draws))];
+const calcFinalScore = ([winner, draw]) => draw * getSumOfUnmarkedNumbers(winner);
 
-export const part1 = pipe(split('\n'), buildBingo, playBingo, calcFinalScore);
+const playBingoFirstWinner = ([board, draw]) => playBingo([board, draw], board.length - 1);
+const playBingoToLetSquidWin = ([board, draw]) => playBingo([board, draw], 0);
+
+export const part1 = pipe(split('\n'), buildBingo, playBingoFirstWinner, calcFinalScore);
+export const part2 = pipe(split('\n'), buildBingo, playBingoToLetSquidWin, calcFinalScore);

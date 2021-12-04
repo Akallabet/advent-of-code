@@ -1,4 +1,4 @@
-import { part1 } from './4';
+import { part1, part2 } from './4';
 import input from './input.js';
 
 const example = `7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
@@ -27,5 +27,11 @@ describe('Day 3: Binary Diagnostic', () => {
   });
   it('Part 1', () => {
     expect(part1(input)).toEqual(10374);
+  });
+  it('Part 2 - Example', () => {
+    expect(part2(example)).toEqual(1924);
+  });
+  it('Part 2', () => {
+    expect(part2(input)).toEqual(24742);
   });
 });
