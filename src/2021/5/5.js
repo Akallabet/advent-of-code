@@ -17,50 +17,34 @@ const drawLine = (fn) => {
   return drawLineRec;
 };
 
-const drawVerticalLine = drawLine(([xa, ya], [_, yb]) => [xa, ya > yb ? ya - 1 : ya + 1]);
-const drawHorizontalLine = drawLine(([xa, ya], [xb]) => [xa > xb ? xa - 1 : xa + 1, ya]);
-const drawDiagonalLine = drawLine(([xa, ya], [xb, yb]) => [
-  xa > xb ? xa - 1 : xa + 1,
-  ya > yb ? ya - 1 : ya + 1,
-]);
+const verticalLine = ([xa, ya], [_, yb]) => [xa, ya > yb ? ya - 1 : ya + 1];
+const horizontalLine = ([xa, ya], [xb]) => [xa > xb ? xa - 1 : xa + 1, ya];
+const diagonalLine = ([xa, ya], [xb, yb]) => [xa > xb ? xa - 1 : xa + 1, ya > yb ? ya - 1 : ya + 1];
 
-const drawLines = (selectLine) => (points) =>
-  reduce(
-    (floor, [[xa, ya], [xb, yb]]) => {
-      const fn = selectLine([xa, ya], [xb, yb]);
-      return fn
-        ? fn(
-            [
-              [xa, ya],
-              [xb, yb],
-            ],
-            floor
-          )
-        : floor;
-    },
-    makeOceanFloor(points),
-    points
-  );
+const drawLines = (isDiagonal = false) =>
+  reduce((floor, [[xa, ya], [xb, yb]]) => {
+    const fn =
+      (xa === xb && drawLine(verticalLine)) ||
+      (ya === yb && drawLine(horizontalLine)) ||
+      (isDiagonal && Math.abs(xb - xa) === Math.abs(yb - ya) && drawLine(diagonalLine));
+    return fn
+      ? fn(
+          [
+            [xa, ya],
+            [xb, yb],
+          ],
+          floor
+        )
+      : floor;
+  });
 
-const onlyVerticalAndHorizontalLines = drawLines(
-  ([xa, ya], [xb, yb]) => (xa === xb && drawVerticalLine) || (ya === yb && drawHorizontalLine)
-);
-
-const onlyVerticalHorizontalAndDiagonalLines = drawLines(
-  ([xa, ya], [xb, yb]) =>
-    (xa === xb && drawVerticalLine) ||
-    (ya === yb && drawHorizontalLine) ||
-    (Math.abs(xb - xa) === Math.abs(yb - ya) && drawDiagonalLine)
-);
-
-const hydrothermalVenture = (drawLinesFn) =>
+const hydrothermalVenture = (isDiagonal) =>
   pipe(
     split('\n'),
     map(pipe(split(' -> '), map(split(',')), map(map(Number)))),
-    drawLinesFn,
+    (points) => drawLines(isDiagonal)(makeOceanFloor(points), points),
     reduce((dangerousAreas, row) => dangerousAreas + filter((cell) => cell > 1, row).length, 0)
   );
 
-export const part1 = hydrothermalVenture(onlyVerticalAndHorizontalLines);
-
-export const part2 = hydrothermalVenture(onlyVerticalHorizontalAndDiagonalLines);
+export const part1 = hydrothermalVenture(false);
+export const part2 = hydrothermalVenture(true);
