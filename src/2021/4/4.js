@@ -1,4 +1,4 @@
-import { filter, map, pipe, reduce, split, sum, transpose } from 'ramda';
+import { filter, find, map, not, pipe, reduce, split, sum, transpose } from 'ramda';
 
 const buildBingoBoards = pipe(
   reduce((boards, line) => {
@@ -36,15 +36,13 @@ const getSumOfUnmarkedNumbers = pipe(
 );
 
 const isWinnerBoard = (board) => hasOneCompleteRow(board) || hasOneCompleteRow(transpose(board));
-const isNotWinnerBoard = (board) => !isWinnerBoard(board);
 
 const playBingo = ([boards, [draw, ...draws]], limit) => {
   const markedBoards = markDrawnNumber(draw)(boards);
-  const winners = filter(isWinnerBoard, markedBoards);
-  const lastWinner = winners[winners.length - 1];
-  const newBoards = filter(isNotWinnerBoard, markedBoards);
+  const winner = find(isWinnerBoard, markedBoards);
+  const newBoards = filter(pipe(isWinnerBoard, not), markedBoards);
 
-  if (newBoards.length === limit) return [lastWinner, draw];
+  if (newBoards.length === limit) return [winner, draw];
   return playBingo([newBoards, draws], limit);
 };
 
