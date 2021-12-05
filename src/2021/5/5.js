@@ -42,11 +42,11 @@ const drawLines = (selectLine) => (points) =>
     points
   );
 
-const drawVerticalAndHorizontalLines = drawLines(
+const onlyVerticalAndHorizontalLines = drawLines(
   ([xa, ya], [xb, yb]) => (xa === xb && drawVerticalLine) || (ya === yb && drawHorizontalLine)
 );
 
-const drawVerticalHorizontalAndDiagonalLines = drawLines(
+const onlyVerticalHorizontalAndDiagonalLines = drawLines(
   ([xa, ya], [xb, yb]) =>
     (xa === xb && drawVerticalLine) ||
     (ya === yb && drawHorizontalLine) ||
@@ -61,6 +61,6 @@ const hydrothermalVenture = (drawLinesFn) =>
     reduce((dangerousAreas, row) => dangerousAreas + filter((cell) => cell > 1, row).length, 0)
   );
 
-export const part1 = hydrothermalVenture(drawVerticalAndHorizontalLines);
+export const part1 = hydrothermalVenture(onlyVerticalAndHorizontalLines);
 
-export const part2 = hydrothermalVenture(drawVerticalHorizontalAndDiagonalLines);
+export const part2 = hydrothermalVenture(onlyVerticalHorizontalAndDiagonalLines);
