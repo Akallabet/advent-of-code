@@ -1,32 +1,27 @@
-import { part1, day, spawn, spawnCycle } from './6';
+import { lanternfish, spawn } from './6';
 import input from './input.js';
 
 describe('Day 6: Lanternfish', () => {
-  it('fish timers decrement each day', () => {
-    const example = [3, 4, 3, 1, 2];
-    expect(day(example, 1)).toEqual([2, 3, 2, 0, 1]);
-  });
-  it('fish timers with zero resets to 6', () => {
-    const example = [2, 3, 2, 0, 1];
-    expect(day(example, 1)).toEqual([1, 2, 1, 6, 0]);
-  });
-  it('spawn new fish if timer is zero', () => {
-    const example = [2, 3, 2, 0, 1];
-    expect(spawn(example)).toEqual([8]);
-  });
-  it('spawn one new fish after 2 days', () => {
-    const example = [3, 4, 3, 1, 2];
-    expect(spawnCycle(2)(example)).toEqual([1, 2, 1, 6, 0, 8]);
+  it('spawns 1 fish after 2 days', () => {
+    const example = [0, 1, 1, 2, 1, 0, 0, 0, 0];
+    expect(spawn(1)(example)).toEqual([1, 1, 2, 1, 0, 0, 0, 0, 0]);
   });
   it('there are 26 fish after 18 days', () => {
     const example = `3,4,3,1,2`;
-    expect(part1(example, 18)).toEqual(26);
+    expect(lanternfish(example, 18)).toEqual(26);
   });
   it('Part 1 - Example', () => {
     const example = `3,4,3,1,2`;
-    expect(part1(example, 80)).toEqual(5934);
+    expect(lanternfish(example, 80)).toEqual(5934);
   });
   it('Part 1', () => {
-    expect(part1(input, 80)).toEqual(379114);
+    expect(lanternfish(input, 80)).toEqual(379114);
+  });
+  it('Part 2 - Example', () => {
+    const example = `3,4,3,1,2`;
+    expect(lanternfish(example, 256)).toEqual(26984457539);
+  });
+  it('Part 2', () => {
+    expect(lanternfish(input, 256)).toEqual(1702631502303);
   });
 });

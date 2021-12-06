@@ -1,18 +1,27 @@
-import { length, map, pipe, reduce, split } from 'ramda';
+import { map, pipe, reduce, split, sum } from 'ramda';
 
-export const day = map((fish) => (fish === 0 ? 6 : fish - 1));
-export const spawn = (school) =>
-  reduce((newFish, fish) => (fish === 0 ? [...newFish, 8] : newFish), [], school);
+const breakIntoClasses = (school) => {
+  const classes = [[], [], [], [], [], [], [], [], []];
+  school.forEach((fish) => classes[fish].push(fish));
+  return classes.map((fish) => fish.length);
+};
 
-export const spawnCycle = (days) => (school) =>
+export const spawn = (days) => (school) =>
   reduce(
-    (school) => {
-      return [...day(school), ...spawn(school)];
-    },
+    ([zero, one, two, three, four, five, six, seven, eight]) => [
+      one,
+      two,
+      three,
+      four,
+      five,
+      six,
+      seven + zero,
+      eight,
+      zero,
+    ],
     school,
     [...new Array(days)]
   );
 
-export const part1 = (fish, days) => pipe(split(','), map(Number), spawnCycle(days), length)(fish);
-
-export const part2 = () => {};
+export const lanternfish = (fish, days) =>
+  pipe(split(','), map(Number), breakIntoClasses, spawn(days), sum)(fish);
