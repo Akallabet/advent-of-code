@@ -1,11 +1,6 @@
-import { map, pipe, reduce, sort, split, addIndex } from 'ramda';
-const mapI = addIndex(map);
+import { map, pipe, reduce, sort, split } from 'ramda';
 
-export const summation = pipe(
-  (n) => [...new Array(n)],
-  mapI((_, i) => i + 1),
-  reduce((sum, n) => sum + n, 0)
-);
+export const summation = (distance) => distance * ((distance + 1) / 2);
 
 const calcOptimFuel = (cluster, { move, leastAmOfFuel, hasIncr } = { move: 0 }) => {
   if (move === cluster[cluster.length - 1][0]) return leastAmOfFuel;
