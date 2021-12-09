@@ -1,4 +1,4 @@
-import { part1 } from './9';
+import { part1, part2 } from './9';
 import input from './input.js';
 
 const example = `2199943210
@@ -13,5 +13,11 @@ describe('Day 9: Smoke Basin', () => {
   });
   it('Part 1', () => {
     expect(part1(input)).toEqual(545);
+  });
+  it('Part 2 - example', () => {
+    expect(part2(example)).toEqual(1134);
+  });
+  it('Part 2', () => {
+    expect(part2(input)).toEqual(950600);
   });
 });
