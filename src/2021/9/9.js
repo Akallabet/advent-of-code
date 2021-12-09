@@ -45,23 +45,31 @@ const increse = (x) => x + 1;
 const horizontal = (points, y, x, basinLength, update) => {
   if (points[y][x] === undefined || points[y][x] === 9 || points[y][x] === 'x') return basinLength;
   points[y][x] = 'x';
-  const length =
-    vertical(points, y - 1, x, 0, decrese) + vertical(points, y + 1, x, 0, increse) + 1;
-  return horizontal(points, y, update(x), basinLength + length, update);
+  return horizontal(
+    points,
+    y,
+    update(x),
+    basinLength +
+      vertical(points, y - 1, x, 0, decrese) +
+      vertical(points, y + 1, x, 0, increse) +
+      1,
+    update
+  );
 };
 
 const vertical = (points, y, x, basinLength, update) => {
   if (!points[y] || points[y][x] === undefined || points[y][x] === 9 || points[y][x] === 'x')
     return basinLength;
   points[y][x] = 'x';
-  const basinRowLeftLength = horizontal(points, y, x - 1, 0, decrese);
-  const basinRowRightLength = horizontal(points, y, x + 1, 0, increse);
 
   return vertical(
     points,
     update(y),
     x,
-    basinLength + basinRowLeftLength + basinRowRightLength + 1,
+    basinLength +
+      horizontal(points, y, x - 1, 0, decrese) +
+      horizontal(points, y, x + 1, 0, increse) +
+      1,
     update
   );
 };
