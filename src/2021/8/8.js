@@ -1,5 +1,4 @@
-import { indexOf, join, map, pipe, reduce, sort, split, sum, tap } from 'ramda';
-
+import { findIndex, identity, join, map, pipe, reduce, sortBy, split, sum } from 'ramda';
 const extractInput = pipe(split('\n'), map(split(' | ')));
 
 export const part1 = pipe(
@@ -15,28 +14,60 @@ export const part1 = pipe(
     0
   )
 );
-const digitsOrder = ['d', 'e', 'a', 'f', 'g', 'b', 'c'];
-const digitsMapping = [
-  'ab',
-  'dafgc',
-  'dafbc',
-  'eafb',
-  'defbc',
-  'defgbc',
-  'dab',
-  'deafgbc',
-  'deafbc',
-];
-const sortDigits = sort((a, b) => digitsOrder.indexOf(a) - digitsOrder.indexOf(b));
-const decode = pipe(
-  map(sortDigits),
-  map((d) => digitsMapping.indexOf(d) + 1),
-  join(''),
-  Number
-);
+
+const findKnownPatterns = (digits) => ({
+  1: digits.find((digit) => digit.length === 2),
+  4: digits.find((digit) => digit.length === 4),
+  7: digits.find((digit) => digit.length === 3),
+  8: digits.find((digit) => digit.length === 7),
+});
+
+const findPatterns = (digits) => {
+  const patterns = findKnownPatterns(digits);
+  const sixSegmentsDigits = digits.filter((digit) => digit.length === 6);
+  const fiveSegmentsDigits = digits.filter((digit) => digit.length === 5);
+
+  patterns[9] = sixSegmentsDigits.find((digit) =>
+    patterns[4].every((seg) => digit.indexOf(seg) !== -1)
+  );
+  patterns[0] = sixSegmentsDigits.find(
+    (digit) => digit !== patterns[9] && patterns[1].every((seg) => digit.indexOf(seg) !== -1)
+  );
+  patterns[6] = sixSegmentsDigits.find((digit) => digit !== patterns[9] && digit !== patterns[0]);
+  patterns[3] = fiveSegmentsDigits.find((digit) =>
+    patterns[7].every((seg) => digit.indexOf(seg) !== -1)
+  );
+  patterns[5] = fiveSegmentsDigits.find(
+    (digit) =>
+      digit !== patterns[3] &&
+      patterns[4].reduce((segCount, seg) => segCount + (digit.indexOf(seg) !== -1 ? 1 : 0), 0) === 3
+  );
+  patterns[2] = fiveSegmentsDigits.find((digit) => digit !== patterns[5] && digit !== patterns[3]);
+  return Object.values({ ...patterns })
+    .map(sortBy(identity))
+    .map(join(''));
+};
 
 export const part2 = pipe(
   extractInput,
-  map(([segments, output]) => decode(output)),
+  map(([digits, output]) => [
+    digits.split(' ').map((digit) => digit.split('').sort()),
+    output.split(' ').map((digit) => digit.split('').sort()),
+  ]),
+  map(([digits, output]) => {
+    const patterns = findPatterns(digits);
+    return pipe(
+      map(
+        pipe(
+          sortBy(identity),
+          join(''),
+          (digit) => findIndex((pattern) => digit === pattern, patterns),
+          (index) => index
+        )
+      ),
+      join(''),
+      Number
+    )(output);
+  }),
   sum
 );

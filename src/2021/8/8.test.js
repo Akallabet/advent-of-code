@@ -23,4 +23,10 @@ describe('Day 8: Seven Segment Search', () => {
   it('Part 2 - easy example', () => {
     expect(part2(easyExample)).toEqual(5353);
   });
+  it('Part 2 - example', () => {
+    expect(part2(example)).toEqual(61229);
+  });
+  it('Part 2', () => {
+    expect(part2(input)).toEqual(1091609);
+  });
 });
