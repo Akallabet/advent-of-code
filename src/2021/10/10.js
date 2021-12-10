@@ -1,7 +1,7 @@
-import { map, pipe, reduce, sort, split } from 'ramda';
+import { includes, map, pipe, reduce, sort, split } from 'ramda';
 
-const openingChars = ['{', '(', '[', '<'];
-const closingChars = ['}', ')', ']', '>'];
+const openingChunks = ['{', '(', '[', '<'];
+const closingChunks = ['}', ')', ']', '>'];
 const errorValues = {
   '}': 1197,
   ')': 3,
@@ -15,21 +15,27 @@ const pointValues = {
   '>': 4,
 };
 
-export const getSintaxOpenings = (chars, i, currOpeningChars = []) => {
-  if (i === chars.length) return currOpeningChars;
-  if (openingChars.indexOf(chars[i]) !== -1)
-    return getSintaxOpenings(chars, i + 1, [...currOpeningChars, chars[i]]);
+export const getSintaxOpenings = (chunks, i, currOpeningChunks = []) => {
+  if (i === chunks.length) return currOpeningChunks;
+  if (includes(chunks[i], openingChunks))
+    return getSintaxOpenings(chunks, i + 1, [...currOpeningChunks, chunks[i]]);
   if (
-    closingChars.indexOf(chars[i]) !== -1 &&
-    currOpeningChars[currOpeningChars.length - 1] === openingChars[closingChars.indexOf(chars[i])]
+    includes(chunks[i], closingChunks) &&
+    currOpeningChunks[currOpeningChunks.length - 1] ===
+      openingChunks[closingChunks.indexOf(chunks[i])]
   ) {
-    return getSintaxOpenings(chars, i + 1, currOpeningChars.slice(0, currOpeningChars.length - 1));
+    return getSintaxOpenings(
+      chunks,
+      i + 1,
+      currOpeningChunks.slice(0, currOpeningChunks.length - 1)
+    );
   }
   if (
-    closingChars.indexOf(chars[i]) !== -1 &&
-    currOpeningChars[currOpeningChars.length - 1] !== openingChars[closingChars.indexOf(chars[i])]
+    includes(chunks[i], closingChunks) &&
+    currOpeningChunks[currOpeningChunks.length - 1] !==
+      openingChunks[closingChunks.indexOf(chunks[i])]
   )
-    return { error: chars[i] };
+    return { error: chunks[i] };
 };
 
 const sintaxErrors = reduce((errors, sintax) => {
@@ -40,7 +46,7 @@ const sintaxErrors = reduce((errors, sintax) => {
 const sumErrorValues = reduce((total, err) => total + errorValues[err], 0);
 
 const getClosingSintaxFromOpening = reduce(
-  (closing, char) => [closingChars[openingChars.indexOf(char)], ...closing],
+  (closing, char) => [closingChunks[openingChunks.indexOf(char)], ...closing],
   []
 );
 const getClosingSintaxes = reduce((closingSintaxes, sintax) => {
@@ -52,11 +58,11 @@ const getClosingSintaxes = reduce((closingSintaxes, sintax) => {
 
 const calcOpeningSintaxScore = reduce((total, char) => 5 * total + pointValues[char], 0);
 const getMiddleScore = (scores) => scores[Math.floor(scores.length / 2)];
-export const part1 = pipe(split('\n'), map(split('')), sintaxErrors, sumErrorValues);
+const extractInput = pipe(split('\n'), map(split('')));
 
+export const part1 = pipe(extractInput, sintaxErrors, sumErrorValues);
 export const part2 = pipe(
-  split('\n'),
-  map(split('')),
+  extractInput,
   getClosingSintaxes,
   map(calcOpeningSintaxScore),
   sort((a, b) => a - b),
