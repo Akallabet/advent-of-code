@@ -58,4 +58,12 @@ const doSteps = (octopi, steps = 1, step = 0, flashes = 0) => {
 
 const startSteps = (steps) => (octopi) => doSteps(octopi, steps, 0, 0);
 
+const firstSimFlashing = (octopi, steps = 4000, step = 0) => {
+  if (step === steps) return -1;
+  const [increasedOctopi, flashes] = flash(increaseEnergyLevels(octopi), 0);
+  if (flashes === octopi.length * octopi[0].length) return step + 1;
+  return firstSimFlashing(increasedOctopi, steps, step + 1);
+};
+
 export const part1 = (input, steps) => pipe(extractInput, startSteps(steps))(input);
+export const part2 = (input) => pipe(extractInput, firstSimFlashing)(input);

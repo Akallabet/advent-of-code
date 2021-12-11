@@ -1,4 +1,4 @@
-import { part1, extractInput, increaseEnergyLevels, flash, findflashIndex } from './11';
+import { part1, extractInput, increaseEnergyLevels, flash, findflashIndex, part2 } from './11';
 import input from './input';
 
 const example = `5483143223
@@ -70,5 +70,24 @@ describe('Day 11: Dumbo Octopus', () => {
   });
   it('Part 1', () => {
     expect(part1(input, 100)[1]).toEqual(1601);
+  });
+  it('flash all octopi', () => {
+    const example = `6988888888
+9988888888
+8888888888
+8888888888
+8888888888
+8888888888
+8888888888
+8888888888
+8888888888
+8888888888`;
+    expect(part2(example)).toEqual(1);
+  });
+  it('Part 2 - Example', () => {
+    expect(part2(example)).toEqual(195);
+  });
+  it('Part 2', () => {
+    expect(part2(input)).toEqual(368);
   });
 });
