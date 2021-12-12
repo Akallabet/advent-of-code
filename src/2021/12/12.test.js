@@ -1,4 +1,4 @@
-import { part1, parseInput, buildGraph, findPaths, isBigCave } from './12';
+import { part1, parseInput, buildGraph, findPaths, isBigCave, part2 } from './12';
 import input from './input';
 
 const example = `start-A
@@ -61,7 +61,16 @@ A-end`;
 });
 
 describe('Day 12 - Passage Pathing', () => {
+  it('Part 1 - Example', () => {
+    expect(part1(example)).toEqual(10);
+  });
   it('Part 1', () => {
     expect(part1(input)).toEqual(3713);
+  });
+  it('Part 2 - Example', () => {
+    expect(part2(example)).toEqual(36);
+  });
+  it('Part 2', () => {
+    expect(part2(input)).toEqual(91292);
   });
 });
