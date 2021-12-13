@@ -44,7 +44,7 @@ describe('Graph', () => {
 
   it('Find path - simple', () => {
     const graph = buildGraph(parseInput('start-a\na-b\nb-end'));
-    expect(findPaths(graph, 'start', 'end', 'start')).toEqual(1);
+    expect(findPaths(graph, 'start', 'end')).toEqual(1);
   });
 
   it('Find path - big caves', () => {
@@ -52,11 +52,11 @@ describe('Graph', () => {
 A-b
 A-end`;
     const graph = buildGraph(parseInput(bigCaves));
-    expect(findPaths(graph, 'start', 'end', 'start')).toEqual(2);
+    expect(findPaths(graph, 'start', 'end')).toEqual(2);
   });
   it('Find paths - Example', () => {
     const graph = buildGraph(parseInput(example));
-    expect(findPaths(graph, 'start', 'end', 'start')).toEqual(10);
+    expect(findPaths(graph, 'start', 'end')).toEqual(10);
   });
 });
 
