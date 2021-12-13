@@ -1,5 +1,5 @@
-import { foldOnColumns, foldOnRows, parseInput, part1 } from './13';
-import input from './input';
+import { foldOnColumns, foldOnRows, parseInput, part1, part2 } from './13';
+import input from './input.js';
 
 const example = `6,10
 0,14
@@ -42,7 +42,7 @@ fold along x=8`;
       ],
     ]);
   });
-  it('Fold on rows', () => {
+  it('Fold on columns', () => {
     const foldingInput = [
       [0, 0, 0, 1, 0],
       [1, 1, 0, 0, 0],
@@ -60,7 +60,46 @@ fold along x=8`;
     const res = foldOnColumns(foldingInput, 2);
     expect(res).toEqual(expected);
   });
-  it('Fold on columns', () => {
+  it('Fold on columns, even columns', () => {
+    const foldingInput = [
+      [0, 0, 0, 1, 0, 1],
+      [1, 1, 0, 0, 0, 1],
+      [0, 0, 0, 1, 0, 1],
+      [1, 1, 0, 0, 0, 1],
+      [1, 1, 0, 0, 0, 1],
+    ];
+    const expected = [
+      [0, 1, 0],
+      [1, 1, 0],
+      [0, 1, 0],
+      [1, 1, 0],
+      [1, 1, 0],
+    ];
+    console.log('even columns');
+    const res = foldOnColumns(foldingInput, 3);
+    console.table(res);
+    expect(res).toEqual(expected);
+  });
+  it('Fold on rows, even rows', () => {
+    const foldingInput = [
+      [0, 0, 0, 1, 0],
+      [1, 1, 0, 0, 0],
+      [0, 0, 0, 1, 0],
+      [1, 1, 0, 0, 0],
+      [1, 1, 0, 0, 0],
+      [1, 1, 0, 0, 0],
+    ];
+    const expected = [
+      [0, 0, 0, 1, 0],
+      [1, 1, 0, 0, 0],
+      [1, 1, 0, 1, 0],
+    ];
+    console.log('even rows');
+    const res = foldOnRows(foldingInput, 3);
+    console.table(res);
+    expect(res).toEqual(expected);
+  });
+  it('Fold on rows, odd rows', () => {
     const foldingInput = [
       [0, 0, 0, 1, 0],
       [1, 1, 0, 0, 0],
@@ -72,7 +111,9 @@ fold along x=8`;
       [1, 1, 0, 1, 0],
       [1, 1, 0, 0, 0],
     ];
+    console.log('odd rows');
     const res = foldOnRows(foldingInput, 2);
+    console.table(res);
     expect(res).toEqual(expected);
   });
 });
@@ -83,5 +124,20 @@ describe('Day 13 - Transparent Origami', () => {
   });
   it('Part 1', () => {
     expect(part1(input)).toEqual(661);
+  });
+  it('Part 2 - Example', () => {
+    const res = part2(example);
+    console.table(res);
+    // expect(res).toEqual(661);
+  });
+  it('Part 2 ', () => {
+    const res = part2(input);
+    // console.log(res);
+    // expect(res).toEqual(661);
+  });
+  it.only('Part 2 ', () => {
+    part2(input);
+    // console.log(res);
+    // expect(res).toEqual(661);
   });
 });

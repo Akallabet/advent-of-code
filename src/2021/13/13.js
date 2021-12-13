@@ -47,20 +47,25 @@ const createPaper = pipe(map(invertCoord), sort(comparator), (coords) => {
   return paper;
 });
 
-export const foldOnColumns = (paper, fold) =>
-  mapI(
-    (row, y) =>
-      mapI((_, x) => {
-        return paper[y][x] || paper[y][paper[y].length - 1 - x];
-      }, row),
-    createEmptyPaper(paper.length - 1, fold - 1)
-  );
+export const foldOnColumns = (paper) => {
+  return mapI((row, y) => {
+    return mapI((_, x) => {
+      return paper[y][x] || paper[y][paper[y].length - 1 - x];
+    }, row);
+  }, createEmptyPaper(paper.length - 1, Math.floor(paper[0].length / 2) - 1));
+};
 
-export const foldOnRows = (paper, fold) =>
-  mapI(
-    (row, y) => mapI((_, x) => paper[y][x] || paper[paper.length - 1 - y][x], row),
-    createEmptyPaper(fold - 1, paper[0].length - 1)
-  );
+export const foldOnRows = (paper, fold) => {
+  // console.log('fold', Math.floor(paper.length / 2));
+  return mapI((row, y) => {
+    // console.log('bottom', paper.length - 1 - y);
+    const cut = paper.length - 1 - y;
+    return mapI((_, x) => {
+      // console.log(y, x);
+      return paper[y][x] || (paper[cut] && paper[cut][x]) || 0;
+    }, row);
+  }, createEmptyPaper(Math.floor(paper.length / 2) - 1, paper[0].length - 1));
+};
 
 const countNumberOfVisibleDots = reduce(
   (tot, row) => tot + filter((point) => point === 1, row).length,
@@ -71,7 +76,19 @@ export const part1 = pipe(
   parseInput,
   ([coordinates, [[ax, folding]]]) => {
     const foldingFn = ax === 'y' ? foldOnRows : foldOnColumns;
-    return foldingFn(createPaper(coordinates), folding);
+    return foldingFn(coordinates, folding);
   },
   countNumberOfVisibleDots
+);
+
+const foldPaper = reduce((paper, [ax, folding]) => {
+  // console.log({ y: paper.length, x: paper[0].length }, ax, folding);
+  const foldingFn = ax === 'y' ? foldOnRows : foldOnColumns;
+  return foldingFn(paper, folding);
+});
+
+export const part2 = pipe(
+  parseInput,
+  ([coordinates, instructions]) => foldPaper(createPaper(coordinates), instructions),
+  console.table
 );
