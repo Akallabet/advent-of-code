@@ -10,7 +10,6 @@ import {
   replace,
   sort,
   split,
-  tap,
 } from 'ramda';
 const mapI = addIndex(map);
 
@@ -87,8 +86,6 @@ const foldPaper = reduce((paper, [ax, folding]) => {
   return foldingFn(paper, folding);
 });
 
-export const part2 = pipe(
-  parseInput,
-  ([coordinates, instructions]) => foldPaper(createPaper(coordinates), instructions),
-  console.table
+export const part2 = pipe(parseInput, ([coordinates, instructions]) =>
+  foldPaper(createPaper(coordinates), instructions)
 );

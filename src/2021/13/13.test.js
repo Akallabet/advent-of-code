@@ -75,9 +75,9 @@ fold along x=8`;
       [1, 1, 0],
       [1, 1, 0],
     ];
-    console.log('even columns');
+    // console.log('even columns');
     const res = foldOnColumns(foldingInput, 3);
-    console.table(res);
+    // console.table(res);
     expect(res).toEqual(expected);
   });
   it('Fold on rows, even rows', () => {
@@ -94,9 +94,9 @@ fold along x=8`;
       [1, 1, 0, 0, 0],
       [1, 1, 0, 1, 0],
     ];
-    console.log('even rows');
+    // console.log('even rows');
     const res = foldOnRows(foldingInput, 3);
-    console.table(res);
+    // console.table(res);
     expect(res).toEqual(expected);
   });
   it('Fold on rows, odd rows', () => {
@@ -111,9 +111,9 @@ fold along x=8`;
       [1, 1, 0, 1, 0],
       [1, 1, 0, 0, 0],
     ];
-    console.log('odd rows');
+    // console.log('odd rows');
     const res = foldOnRows(foldingInput, 2);
-    console.table(res);
+    // console.table(res);
     expect(res).toEqual(expected);
   });
 });
@@ -126,12 +126,12 @@ describe('Day 13 - Transparent Origami', () => {
     expect(part1(input)).toEqual(661);
   });
   it('Part 2 - Example', () => {
-    const res = part2(example);
-    console.table(res);
+    part2(example);
+    // console.table(res);
     // expect(res).toEqual(661);
   });
   it('Part 2 ', () => {
-    const res = part2(input);
+    part2(input);
     // console.log(res);
     // expect(res).toEqual(661);
   });
