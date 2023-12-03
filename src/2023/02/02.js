@@ -29,3 +29,15 @@ export function cubeConundrum (values) {
     return true
   }).reduce((acc, { gameId }) => acc + gameId, 0)
 }
+
+export function cubeConundrumPart2 (values) {
+  return values.split('\n').filter(Boolean).map(line => {
+    const bagContent = line.split(': ')[1]
+    return Object.values(bagContent.split('; ').map(set => set.split(', ')).flat().reduce((bag, item) => {
+      const [amount, color] = item.split(' ')
+      if (!bag[color]) bag[color] = 0
+      if (Number(amount)> bag[color]) bag[color] = Number(amount)
+      return bag
+    }, {})).reduce((acc, val) => acc * val, 1)
+  }).reduce((acc, val) => acc + val, 0)
+}

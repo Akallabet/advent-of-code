@@ -2,7 +2,7 @@ import test from 'node:test'
 import { strict as assert } from 'node:assert'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
-import {cubeConundrum} from './02.js'
+import {cubeConundrum, cubeConundrumPart2} from './02.js'
 
 const inputValues = await readFile(path.resolve('./src/2023/02/input.txt'), 'utf8')
 
@@ -20,4 +20,14 @@ test('Cube conundrum - Part 1 - test values', (t) => {
 test('Cube conundrum - Part 1', (t) => {
   const result = cubeConundrum(inputValues)
   assert.strictEqual(result, 2563)
+})
+
+test('Cube conundrum - Part 2 - test values', (t) => {
+  const result = cubeConundrumPart2(testValues)
+  assert.strictEqual(result, 2286)
+})
+
+test('Cube conundrum - Part 2', (t) => {
+  const result = cubeConundrumPart2(inputValues)
+  assert.strictEqual(result, 70768)
 })
