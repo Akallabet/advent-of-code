@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Advent of code - javascript",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
-    "test": "jest --watch",
+    "test": "node --test --watch src/2023/*/*.test.js",
     "test-once": "jest"
   },
   "author": "Akallabet",
