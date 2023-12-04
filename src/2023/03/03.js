@@ -2,28 +2,13 @@ function isAdjacentNum (values, {y,x}) {
   return (values[y] && values[y][x] && !isNaN(values[y][x])) 
 }
 
-export function gearRatios (input) {
-  const values = input
+function getValues (input) {
+  return input
     .split('\n')
     .map((line) => line.split(''))
+}
 
-  const adjacents = values.map(line => line.map(() => 0))
-
-  values.forEach((line, y) => {
-    line.forEach((cell, x) => {
-      if (isNaN(cell) && cell !== '.') {
-	if (isAdjacentNum(values, {y:y + 1, x:x + 1})) adjacents[y + 1][x + 1] = 1
-	if (isAdjacentNum(values, {y:y + 1, x:x - 1})) adjacents[y + 1][x - 1] = 1
-	if (isAdjacentNum(values, {y:y - 1, x:x + 1})) adjacents[y - 1][x + 1] = 1
-	if (isAdjacentNum(values, {y:y - 1, x:x - 1})) adjacents[y - 1][x - 1] = 1
-	if (isAdjacentNum(values, {y:y + 1, x})) adjacents[y + 1][x] = 1
-	if (isAdjacentNum(values, {y:y - 1, x})) adjacents[y - 1][x] = 1
-	if (isAdjacentNum(values, {y,x:x + 1})) adjacents[y][x + 1] = 1
-	if (isAdjacentNum(values, {y,x:x - 1})) adjacents[y][x - 1] = 1
-      }
-    })
-  })
-
+function getNumbers (values) {
   const numbers = []
 
   for (let y = 0; y < values.length; y++) {
@@ -48,9 +33,78 @@ export function gearRatios (input) {
     }
   }
   return numbers
+}
+
+export function gearRatios (input) {
+  const values = getValues(input)
+
+  const adjacents = values.map(line => line.map(() => 0))
+
+  values.forEach((line, y) => {
+    line.forEach((cell, x) => {
+      if (isNaN(cell) && cell !== '.') {
+	if (isAdjacentNum(values, {y:y + 1, x:x + 1})) adjacents[y + 1][x + 1] = 1
+	if (isAdjacentNum(values, {y:y + 1, x:x - 1})) adjacents[y + 1][x - 1] = 1
+	if (isAdjacentNum(values, {y:y - 1, x:x + 1})) adjacents[y - 1][x + 1] = 1
+	if (isAdjacentNum(values, {y:y - 1, x:x - 1})) adjacents[y - 1][x - 1] = 1
+	if (isAdjacentNum(values, {y:y + 1, x})) adjacents[y + 1][x] = 1
+	if (isAdjacentNum(values, {y:y - 1, x})) adjacents[y - 1][x] = 1
+	if (isAdjacentNum(values, {y,x:x + 1})) adjacents[y][x + 1] = 1
+	if (isAdjacentNum(values, {y,x:x - 1})) adjacents[y][x - 1] = 1
+      }
+    })
+  })
+
+  const numbers = getNumbers(values)
+  return numbers
     .filter(({y,x:cols}) => {
       return cols.some(x => adjacents[y][x] === 1)
     })
     .map(({amount})=> amount)
     .reduce((acc, val) => acc + val, 0)
+}
+
+export function gearRatiosPart2 (input) {
+  const values = getValues(input)
+  const numbers = getNumbers(values)
+
+  // const gears = values.map(line => line.map(() => 0))
+  const gears = []
+
+  values.forEach((line, y) => {
+    line.forEach((cell, x) => {
+      if (cell === '*') {
+	const adjacentCells = [
+	  isAdjacentNum(values, {y:y + 1, x:x + 1})&&{y:y + 1, x:x + 1},
+	  isAdjacentNum(values, {y:y + 1, x:x - 1})&&{y:y + 1, x:x - 1},
+	  isAdjacentNum(values, {y:y - 1, x:x + 1})&&{y:y - 1, x:x + 1},
+	  isAdjacentNum(values, {y:y - 1, x:x - 1})&&{y:y - 1, x:x - 1},
+	  isAdjacentNum(values, {y:y + 1, x})&&{y:y + 1, x},
+	  isAdjacentNum(values, {y:y - 1, x})&&{y:y - 1, x},
+	  isAdjacentNum(values, {y,x:x + 1})&&{y,x:x + 1},
+	  isAdjacentNum(values, {y,x:x - 1})&&{y,x:x - 1}
+	].filter(Boolean)
+	  // console.log('adjacent', adjacentCells)
+	const adjacentNumers = numbers
+	  .filter(({y:row,x:cols}) => {
+	    return adjacentCells.find((pos)=> pos.y === row && cols.includes(pos.x))
+	  })
+	if (adjacentNumers.length === 2) {
+	  gears.push(adjacentNumers.map(({amount}) => amount).reduce((acc, num) => {
+	    return acc*num
+	  },1)
+	  )
+	}
+
+	// console.log('adjacentNumers', adjacentNumers)
+      }
+    })
+  })
+  return gears.reduce((acc, val) => acc + val, 0)
+  // return numbers
+  //   .filter(({y,x:cols}) => {
+  //     return cols.some(x => adjacents[y][x] === 1)
+  //   })
+  //   .map(({amount})=> amount)
+  //   .reduce((acc, val) => acc + val, 0)
 }
