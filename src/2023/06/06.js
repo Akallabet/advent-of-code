@@ -1,10 +1,14 @@
-export function calcDistance ({ hold = 1, time = 1 }) {
-  const timeLeft = time - hold
-  return timeLeft * hold
+function quadraticEquation (a, b, c) {
+  const d = Math.sqrt(b * b - 4 * a * c)
+  const x1 = (-b + d) / (2 * a)
+  const x2 = (-b - d) / (2 * a)
+  return [Math.floor(x1), Math.ceil(x2)]
 }
 
-export function calcWin ({ hold = 1, time = 1, distance = 1 }) {
-  return calcDistance({ hold, time }) > distance
+function calcNumberOfWins ({ time, distance }) {
+  const [upper, lower] = quadraticEquation(-1, -time, -distance)
+  const combinations = Math.abs(upper - lower + 1)
+  return combinations
 }
 
 export function waitForIt (input) {
@@ -22,13 +26,7 @@ export function waitForIt (input) {
   })
 
   const combinations = values.reduce((total, { time, distance }) => {
-    let combinations = 0
-    for (let hold = 1; hold <= time; hold++) {
-      const isWin = calcWin({ hold, time, distance })
-      if (isWin) {
-        combinations++
-      }
-    }
+    const combinations = calcNumberOfWins({ time, distance })
     return total * combinations
   }, 1)
 
@@ -42,13 +40,5 @@ export function waitForItPart2 (input) {
       .slice(1)
       .filter(Boolean).join('')).map(Number)
 
-  let combinations = 0
-  for (let hold = 1; hold <= time; hold++) {
-    const isWin = calcWin({ hold, time, distance })
-    if (isWin) {
-      combinations++
-    }
-  }
-
-  return combinations
+  return calcNumberOfWins({ time, distance })
 }
