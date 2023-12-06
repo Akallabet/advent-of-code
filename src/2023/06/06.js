@@ -34,3 +34,21 @@ export function waitForIt (input) {
 
   return combinations
 }
+
+export function waitForItPart2 (input) {
+  const [time, distance] = input
+    .split('\n')
+    .map(line => line.split(' ')
+      .slice(1)
+      .filter(Boolean).join('')).map(Number)
+
+  let combinations = 0
+  for (let hold = 1; hold <= time; hold++) {
+    const isWin = calcWin({ hold, time, distance })
+    if (isWin) {
+      combinations++
+    }
+  }
+
+  return combinations
+}
