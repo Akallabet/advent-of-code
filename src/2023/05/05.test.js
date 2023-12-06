@@ -2,7 +2,7 @@ import test from 'node:test'
 import { strict as assert } from 'node:assert'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
-import { giveASeedAFertilizer } from './05.js'
+import { giveASeedAFertilizer, giveASeedAFertilizerPart2 } from './05.js'
 
 const inputValues = () => readFile(path.resolve('./src/2023/05/input.txt'), 'utf8')
 
@@ -49,3 +49,13 @@ test('Give a seed a fertilizer - Part 1', async () => {
   const result = giveASeedAFertilizer(await inputValues())
   assert.strictEqual(result, 251346198)
 })
+
+// test('Give a seed a fertilizer - Part 2 - test values', () => {
+//   const result = giveASeedAFertilizerPart2(testValues)
+//   assert.strictEqual(result, 46)
+// })
+
+// test('Give a seed a fertilizer - Part 2', async () => {
+//   const result = giveASeedAFertilizerPart2(await inputValues())
+//   assert.strictEqual(result, 251346198)
+// })
