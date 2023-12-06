@@ -68,7 +68,6 @@ export function gearRatiosPart2 (input) {
   const values = getValues(input)
   const numbers = getNumbers(values)
 
-  // const gears = values.map(line => line.map(() => 0))
   const gears = []
 
   values.forEach((line, y) => {
@@ -84,7 +83,6 @@ export function gearRatiosPart2 (input) {
 	  isAdjacentNum(values, {y,x:x + 1})&&{y,x:x + 1},
 	  isAdjacentNum(values, {y,x:x - 1})&&{y,x:x - 1}
 	].filter(Boolean)
-	  // console.log('adjacent', adjacentCells)
 	const adjacentNumers = numbers
 	  .filter(({y:row,x:cols}) => {
 	    return adjacentCells.find((pos)=> pos.y === row && cols.includes(pos.x))
@@ -95,16 +93,8 @@ export function gearRatiosPart2 (input) {
 	  },1)
 	  )
 	}
-
-	// console.log('adjacentNumers', adjacentNumers)
       }
     })
   })
   return gears.reduce((acc, val) => acc + val, 0)
-  // return numbers
-  //   .filter(({y,x:cols}) => {
-  //     return cols.some(x => adjacents[y][x] === 1)
-  //   })
-  //   .map(({amount})=> amount)
-  //   .reduce((acc, val) => acc + val, 0)
 }
