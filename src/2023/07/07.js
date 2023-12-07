@@ -1,4 +1,3 @@
-const cardsRank = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 export const hands = {
   highCard: 'High Card',
   onePair: 'One Pair',
@@ -10,23 +9,6 @@ export const hands = {
 }
 const handsRank = [hands.highCard, hands.onePair, hands.twoPairs, hands.threeOfAKind, hands.fullHouse, hands.fourOfAKind, hands.fiveOfAKind]
 
-function compareByHand (a, b) {
-  return handsRank.indexOf(a.hand) - handsRank.indexOf(b.hand)
-}
-
-function compareByRank (a, b) {
-  if (!a.length) return 0
-  const rank = cardsRank.indexOf(a[0]) - cardsRank.indexOf(b[0])
-  if (rank) return rank
-  return compareByRank(a.slice(1), b.slice(1))
-}
-
-export function compareCards (a, b) {
-  const rank = compareByHand(a, b)
-  if (rank) return rank
-  return compareByRank(a.cardsString, b.cardsString)
-}
-
 const numberToHand = {
   1: hands.highCard,
   2: hands.onePair,
@@ -35,26 +17,7 @@ const numberToHand = {
   5: hands.fiveOfAKind
 }
 
-function groupByCard (groups, card) {
-  if (!groups[card]) groups[card] = { card, count: 0 }
-  groups[card].count++
-  groups[card].type = numberToHand[groups[card].count]
-  return groups
-}
-
-export function fromCardStringToArray (cards) {
-  return Object.values(cards.split('').reduce(groupByCard, {}))
-    .reduce((acc, group) => {
-      acc.push(group)
-      return acc
-    }, []).toSorted((a, b) => {
-      const rank = handsRank.indexOf(b.type) - handsRank.indexOf(a.type)
-      if (rank) return rank
-      return cardsRank.indexOf(b.card) - cardsRank.indexOf(a.card)
-    })
-}
-
-export function determineHand (cards) {
+function determineHand (cards) {
   if (cards[0].type === hands.fiveOfAKind) return hands.fiveOfAKind
   if (cards[0].type === hands.fourOfAKind) return hands.fourOfAKind
 
@@ -69,24 +32,88 @@ export function determineHand (cards) {
   return hands.highCard
 }
 
-function addHand (cardObj) {
+function compareByRank (a, b) {
+  return a[0] - b[0] || compareByRank(a.slice(1), b.slice(1))
+}
+
+function compareCards (a, b) {
+  return handsRank.indexOf(a.hand) - handsRank.indexOf(b.hand) || compareByRank(a.cardsString, b.cardsString)
+}
+
+function groupByCard (groups, card) {
+  if (!groups[card]) groups[card] = { card, count: 0 }
+  groups[card].count++
+  groups[card].type = numberToHand[groups[card].count]
+  return groups
+}
+
+function groupAndRankCards (cards) {
+  return Object.values(cards.reduce(groupByCard, {}))
+    .reduce((acc, group) => {
+      acc.push(group)
+      return acc
+    }, []).toSorted((a, b) => {
+      const rank = handsRank.indexOf(b.type) - handsRank.indexOf(a.type)
+      if (rank) return rank
+      return b.card - a.card
+    })
+}
+
+function parseInput (input) {
+  return input
+    .split('\n')
+    .filter(Boolean)
+    .map(line => line.split(' '))
+}
+
+function calcHands ([cardsString, value]) {
+  const cards = groupAndRankCards(cardsString)
   return {
-    ...cardObj,
-    hand: determineHand(cardObj.cards)
+    cardsString,
+    cards,
+    hand: determineHand(cards),
+    value
   }
 }
 
-export function camelCards (input) {
-  const values = input.split('\n').filter(Boolean).map(line => line.split(' '))
-  const cards = values.map(([cards, value]) => {
-    return {
-      cardsString: cards,
-      cards: fromCardStringToArray(cards),
-      value: Number(value)
-    }
-  }).map(addHand).toSorted(compareCards).map((obj, i) => ({ ...obj, rank: i + 1 }))
+function translateCards (ranks) {
+  return ([cards = '', value]) => {
+    return [cards.split('').map((card) => ranks.indexOf(card)), value]
+  }
+}
 
-  return cards.reduce((acc, { value, rank }) => {
-    return acc + (value * rank)
-  }, 0)
+function totalWinning (acc, { value }, i) {
+  return acc + (value * (i + 1))
+}
+
+export function camelCards (input) {
+  return parseInput(input)
+    .map(translateCards('23456789TJQKA'))
+    .map(calcHands)
+    .toSorted(compareCards)
+    .reduce(totalWinning, 0)
+}
+
+export function useJoker (cardObj) {
+  const { cards } = cardObj
+  if (cards.length === 1) return cardObj
+  const joker = cards.find(card => card.card === 0)
+  if (!joker) return cardObj
+  const cardsWithoutJoker = cards.filter(card => card.card !== 0)
+  cardsWithoutJoker[0].count += joker.count
+  cardsWithoutJoker[0].type = numberToHand[cardsWithoutJoker[0].count]
+  const newHand = determineHand(cardsWithoutJoker)
+  return {
+    ...cardObj,
+    hand: newHand
+  }
+}
+
+export function camelCardsPart2 (input) {
+  return parseInput(input)
+    .map(translateCards('J23456789TQKA'))
+    .map(calcHands)
+    .map(useJoker)
+    .toSorted(compareCards)
+    .reduce(totalWinning, 0)
 }
