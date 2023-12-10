@@ -8,7 +8,7 @@ export function diffs (list = [0]) {
 
 export function diffListToZero (list = [0], listOfDiffs = []) {
   const newDiff = diffs(list)
-  if (newDiff[newDiff.length - 1] === 0) return listOfDiffs
+  if (newDiff.every(diff => diff === 0)) return listOfDiffs
   listOfDiffs.push(diffs(list))
   return diffListToZero(newDiff, listOfDiffs)
 }
@@ -20,8 +20,12 @@ export function calcNextValue (list = [0]) {
     return value + diff[diff.length - 1]
   }, 0)
 }
-export function mirageMaintenance (input) {
-  const lines = input.split('\n').filter(Boolean).map(line => line.split(' ').map(Number)).map(calcNextValue)
 
-  return lines.reduce((acc, line) => acc + line, 0)
+export function mirageMaintenance (input) {
+  return input
+    .split('\n')
+    .filter(Boolean)
+    .map(line => line.split(' ').map(Number))
+    .map(calcNextValue)
+    .reduce((acc, line) => acc + line, 0)
 }

@@ -31,5 +31,5 @@ test('Mirage Maintenance - Part 1 - test values', () => {
 
 test('Mirage Maintenance - Part 1', async () => {
   const result = mirageMaintenance(await inputValues())
-  assert.strictEqual(result, 114)
+  assert.strictEqual(result, 2043677056)
 })
