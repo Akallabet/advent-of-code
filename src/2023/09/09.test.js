@@ -2,7 +2,7 @@ import test from 'node:test'
 import { strict as assert } from 'node:assert'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
-import { calcNextValue, diffListToZero, diffs, mirageMaintenance } from './09.js'
+import { calcNextValue, calcPrevValue, diffListToZero, diffs, mirageMaintenance, mirageMaintenancePart2 } from './09.js'
 
 const inputValues = () => readFile(path.resolve('./src/2023/09/input.txt'), 'utf8')
 
@@ -32,4 +32,14 @@ test('Mirage Maintenance - Part 1 - test values', () => {
 test('Mirage Maintenance - Part 1', async () => {
   const result = mirageMaintenance(await inputValues())
   assert.strictEqual(result, 2043677056)
+})
+
+test('Mirage Maintenance - Part 2 - test values', () => {
+  const result = calcPrevValue([10, 13, 16, 21, 30, 45])
+  assert.strictEqual(result, 5)
+})
+
+test('Mirage Maintenance - Part 2', async () => {
+  const result = mirageMaintenancePart2(await inputValues())
+  assert.strictEqual(result, 1062)
 })

@@ -21,11 +21,30 @@ export function calcNextValue (list = [0]) {
   }, 0)
 }
 
+export function calcPrevValue (list = [0]) {
+  const listOfDiffs = diffListToZero(list, [list])
+
+  // console.log(listOfDiffs)
+  return listOfDiffs.reduceRight((value, diff) => {
+    // console.log(value, diff[0])
+    return diff[0] - value
+  }, 0)
+}
+
 export function mirageMaintenance (input) {
   return input
     .split('\n')
     .filter(Boolean)
     .map(line => line.split(' ').map(Number))
     .map(calcNextValue)
+    .reduce((acc, line) => acc + line, 0)
+}
+
+export function mirageMaintenancePart2 (input) {
+  return input
+    .split('\n')
+    .filter(Boolean)
+    .map(line => line.split(' ').map(Number))
+    .map(calcPrevValue)
     .reduce((acc, line) => acc + line, 0)
 }
