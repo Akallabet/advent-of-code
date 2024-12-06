@@ -15,8 +15,9 @@ func isNumber(element string) bool {
 	return true
 }
 
-func isCorrect(instr []string, element string) bool {
+func isInstruction(instr []string, element string) (bool, bool) {
 	var last string
+
 	if len(instr) > 0 {
 		last = instr[len(instr)-1]
 
@@ -24,42 +25,91 @@ func isCorrect(instr []string, element string) bool {
 		last = ""
 	}
 	if last == "" && element == "m" {
-		return true
+		return true, false
 	}
 	if last == "m" && element == "u" {
-		return true
+		return true, false
 	}
 	if last == "u" && element == "l" {
-		return true
+		return true, false
 	}
 	if last == "l" && element == "(" {
-		return true
+		return true, false
 	}
 	if last == "(" || isNumber(last) {
 		if isNumber(element) {
-			return true
+			return true, false
 		}
 	}
 	if isNumber(last) && element == "," {
-		return true
+		return true, false
 	}
 	if last == "," || isNumber(last) {
 		if isNumber(element) {
-			return true
+			return true, false
 		}
 	}
 	if isNumber(last) && element == ")" {
-		return true
+		return true, true
 	}
-	return false
+	return false, false
 }
 
-func isComplete(instr []string) bool {
-	last := instr[len(instr)-1]
-	if last == ")" {
-		return true
+func isEnabling(instr []string, element string) (bool, bool) {
+	var last string
+
+	if len(instr) > 0 {
+		last = instr[len(instr)-1]
+
+	} else {
+		last = ""
 	}
-	return false
+	if last == "" && element == "d" {
+		return true, false
+	}
+	if last == "d" && element == "o" {
+		return true, false
+	}
+	if last == "o" && element == "(" {
+		return true, false
+	}
+	if last == "(" && element == ")" {
+		return true, true
+	}
+	return false, false
+}
+
+func isDisabling(instr []string, element string) (bool, bool) {
+	var last string
+
+	if len(instr) > 0 {
+		last = instr[len(instr)-1]
+
+	} else {
+		last = ""
+	}
+	if last == "" && element == "d" {
+		return true, false
+	}
+	if last == "d" && element == "o" {
+		return true, false
+	}
+	if last == "o" && element == "n" {
+		return true, false
+	}
+	if last == "n" && element == "'" {
+		return true, false
+	}
+	if last == "'" && element == "t" {
+		return true, false
+	}
+	if last == "t" && element == "(" {
+		return true, false
+	}
+	if last == "(" && element == ")" {
+		return true, true
+	}
+	return false, false
 }
 
 func extractNumbers(instruction string) (int, int) {
@@ -83,13 +133,11 @@ func part1(memory string) int {
 	var instructions []string
 	var instruction []string
 	for _, char := range strings.Split(memory, "") {
-		fmt.Println(char)
-		if isCorrect(instruction, char) {
-			fmt.Println("correct")
+		isValid, isComplete := isInstruction(instruction, char)
+		if isValid {
 			instruction = append(instruction, char)
-			if isComplete(instruction) {
+			if isComplete {
 				instructions = append(instructions, strings.Join(instruction, ""))
-				// fmt.Println("is Complete", instruction)
 				instruction = nil
 			}
 		} else {
@@ -104,7 +152,51 @@ func part1(memory string) int {
 	return result
 }
 
-func part2() {
+func part2(memory string) int {
+	var instructions []string
+	var instruction []string
+	var enablingInstruction []string
+	var disablingInstruction []string
+	var enabled = true
+
+	for _, char := range strings.Split(memory, "") {
+		isValidInstruction, isCompleteInstruction := isInstruction(instruction, char)
+		if isValidInstruction {
+			instruction = append(instruction, char)
+			if isCompleteInstruction && enabled {
+				instructions = append(instructions, strings.Join(instruction, ""))
+				instruction = nil
+			}
+		} else {
+			instruction = nil
+		}
+		isValidEnabling, isCompleteEnabling := isEnabling(enablingInstruction, char)
+		if isValidEnabling {
+			enablingInstruction = append(enablingInstruction, char)
+			if isCompleteEnabling {
+				enabled = true
+				enablingInstruction = nil
+			}
+		} else {
+			enablingInstruction = nil
+		}
+		isValidDisabling, isCompleteDisabling := isDisabling(disablingInstruction, char)
+		if isValidDisabling {
+			disablingInstruction = append(disablingInstruction, char)
+			if isCompleteDisabling {
+				enabled = false
+				disablingInstruction = nil
+			}
+		} else {
+			disablingInstruction = nil
+		}
+	}
+	var result int
+	for _, instruction := range instructions {
+		left, right := extractNumbers(instruction)
+		result += left * right
+	}
+	return result
 }
 
 func main() {
@@ -114,4 +206,5 @@ func main() {
 		panic(err)
 	}
 	fmt.Println(part1(string(dat)))
+	fmt.Println(part2(string(dat)))
 }
