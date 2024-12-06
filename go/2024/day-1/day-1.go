@@ -33,6 +33,8 @@ func part1(leftNumbers []int, rightNumbers []int) {
 	for _, distance := range distances {
 		totalDistance += distance
 	}
+
+	fmt.Println(totalDistance)
 	fmt.Println(totalDistance)
 }
 
