@@ -169,55 +169,66 @@ func topLeftToBottomRight(wordSearch [][]string, y, x int) bool {
 
 func part1(wordSearch [][]string) int {
 	var count = 0
-	// fmt.Println(wordSearch)
 	for y, line := range wordSearch {
-		// fmt.Println(line)
 		for x, letter := range line {
-			// fmt.Println(letter)
 			if letter == "X" {
-				// fmt.Print(y, x, " - ")
 				if leftToRight(wordSearch, y, x) {
-					fmt.Println("left to right")
 					count++
 				}
 				if rightToLeft(wordSearch, y, x) {
-					fmt.Println("right to left")
 					count++
 				}
 				if topToBottom(wordSearch, y, x) {
-					fmt.Println("top to bottom")
 					count++
 				}
 				if bottomToTop(wordSearch, y, x) {
-					fmt.Println("bottom to top")
 					count++
 				}
 				if bottomLeftToTopRight(wordSearch, y, x) {
-					fmt.Println("bottom left to top right")
 					count++
 				}
 				if topRightToBottomLeft(wordSearch, y, x) {
-					fmt.Println("top right to bottom left")
 					count++
 				}
 				if bottomRightToTopLeft(wordSearch, y, x) {
-					fmt.Println("bottom right to top left")
 					count++
 				}
 				if topLeftToBottomRight(wordSearch, y, x) {
-					fmt.Println("top left to bottom right")
 					count++
 				}
 			}
-			// fmt.Println(letter)
 		}
 	}
 	return count
 }
 
 func part2(wordSearch [][]string) int {
-	fmt.Println(wordSearch)
-	return 0
+	var count = 0
+	for y, line := range wordSearch {
+		for x, letter := range line {
+			if y > 0 && y < len(wordSearch)-1 && x > 0 && x < len(wordSearch[y])-1 && letter == "A" {
+				var topLeft = wordSearch[y-1][x-1]
+				var topRight = wordSearch[y-1][x+1]
+				var bottomLeft = wordSearch[y+1][x-1]
+				var bottomRight = wordSearch[y+1][x+1]
+
+				if topLeft == "M" && bottomRight == "S" && topRight == "M" && bottomLeft == "S" {
+					count++
+				}
+				if topLeft == "S" && bottomRight == "M" && topRight == "M" && bottomLeft == "S" {
+					count++
+				}
+				if topLeft == "M" && bottomRight == "S" && topRight == "S" && bottomLeft == "M" {
+					count++
+				}
+				if topLeft == "S" && bottomRight == "M" && topRight == "S" && bottomLeft == "M" {
+					count++
+				}
+
+			}
+		}
+	}
+	return count
 }
 
 func main() {
@@ -234,5 +245,5 @@ func main() {
 		wordsSearch = append(wordsSearch, words)
 	}
 	fmt.Println(part1(wordsSearch)) //2642
-	// fmt.Println(part2(string(dat)))
+	fmt.Println(part2(wordsSearch)) //1974
 }
