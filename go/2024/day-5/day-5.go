@@ -19,7 +19,7 @@ func has(slice []int, num int) bool {
 	return false
 }
 
-func part1(rules map[int][]int, updates [][]int) int {
+func print(rules map[int][]int, updates [][]int, isSorted bool) int {
 	total := 0
 	compare := func(a, b int) int {
 		if has(rules[a], b) {
@@ -28,7 +28,7 @@ func part1(rules map[int][]int, updates [][]int) int {
 		return 0
 	}
 	for _, update := range updates {
-		if slices.IsSortedFunc(update, compare) {
+		if slices.IsSortedFunc(update, compare) == isSorted {
 			slices.SortFunc(update, compare)
 			n := update[len(update)/2]
 			total += n
@@ -36,8 +36,12 @@ func part1(rules map[int][]int, updates [][]int) int {
 	}
 	return total
 }
+func part1(rules map[int][]int, updates [][]int) int {
+	return print(rules, updates, true)
+}
 
-func part2() {
+func part2(rules map[int][]int, updates [][]int) int {
+	return print(rules, updates, false)
 }
 
 func main() {
@@ -78,4 +82,5 @@ func main() {
 	}
 
 	fmt.Println(part1(rules, updates)) //4462
+	fmt.Println(part2(rules, updates)) //6767
 }
