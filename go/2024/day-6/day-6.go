@@ -20,7 +20,9 @@ type Pos struct {
 	x int
 }
 
-var positions = map[string]func(Pos) Pos{
+var directions = []string{"^", "v", "<", ">"}
+
+var guardMoves = map[string]func(Pos) Pos{
 	"^": func(pos Pos) Pos {
 		return Pos{y: pos.y - 1, x: pos.x}
 	},
@@ -35,13 +37,25 @@ var positions = map[string]func(Pos) Pos{
 	},
 }
 
+func changeDirection(direction string) string {
+	if direction == "^" {
+		return ">"
+	} else if direction == ">" {
+		return "v"
+	} else if direction == "v" {
+		return "<"
+	} else {
+		return "^"
+	}
+}
+
 func startingPosition(grid [][]string) Pos {
 	var pos Pos
 	for y, row := range grid {
 		for x, char := range row {
-			for k := range positions {
-				if char == k {
-					pos = positions[k](Pos{y, x})
+			for _, v := range directions {
+				if char == v {
+					return Pos{y: y, x: x}
 				}
 			}
 		}
@@ -50,37 +64,57 @@ func startingPosition(grid [][]string) Pos {
 }
 
 func part1(grid [][]string) int {
-	var guardPos = startingPosition(grid)
-	var guardDirection = grid[guardPos.y][guardPos.x]
+	var currentPos = startingPosition(grid)
 	var exited = false
+	var count = 0
+	var visited = 0
 
-	for !exited {
-		var move = positions[guardDirection]
-		var nextPos = move(guardPos)
-		if grid[nextPos.y][nextPos.x] == "#" {
-			return 1
+	for !exited && count < 60 {
+		// fmt.Println("current", grid[currentPos.y][currentPos.x])
+		var move = guardMoves[grid[currentPos.y][currentPos.x]]
+		var nextPos = move(currentPos)
+		// fmt.Println("next pos", nextPos, len(grid))
+		if nextPos.y < 0 || nextPos.y >= len(grid) || nextPos.x < 0 || nextPos.x >= len(grid[0]) {
+			fmt.Println("exiting")
+			exited = true
+			return visited
 		}
-		// if grid[y][x] == "X" {
-		// 	exited = true
-		// }
+
+		// fmt.Println("next", grid[nextPos.y][nextPos.x])
+		if grid[nextPos.y][nextPos.x] == "." || grid[nextPos.y][nextPos.x] == "X" {
+			grid[nextPos.y][nextPos.x] = grid[currentPos.y][currentPos.x]
+			grid[currentPos.y][currentPos.x] = "X"
+			currentPos = nextPos
+			if grid[nextPos.y][nextPos.x] != "X" {
+				visited++
+			}
+		} else if grid[nextPos.y][nextPos.x] == "#" {
+			var nextDirection = changeDirection(grid[currentPos.y][currentPos.x])
+			// fmt.Print("About to change direction from ", grid[currentPos.y][currentPos.x], " to ", nextDirection, "\n")
+			grid[currentPos.y][currentPos.x] = nextDirection
+		}
+		count++
 	}
-	return 0
+	return visited
 }
 
 func main() {
-	// dat, err := os.ReadFile("input.txt")
-	dat, err := os.ReadFile("example.txt")
+	dat, err := os.ReadFile("input.txt")
+	// dat, err := os.ReadFile("example.txt")
 	if err != nil {
 		panic(err)
 	}
 
 	var grid [][]string
 	for _, line := range strings.Split(string(dat), "\n") {
-		var row []string
-		for _, char := range strings.Split(line, "") {
-			row = append(row, string(char))
+		if len(line) > 0 {
+
+			var row []string
+			for _, char := range strings.Split(line, "") {
+				row = append(row, string(char))
+			}
+			grid = append(grid, row)
 		}
-		grid = append(grid, row)
 	}
 
 	fmt.Println(part1(grid))
