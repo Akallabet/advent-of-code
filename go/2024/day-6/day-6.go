@@ -66,34 +66,30 @@ func startingPosition(grid [][]string) Pos {
 func part1(grid [][]string) int {
 	var currentPos = startingPosition(grid)
 	var exited = false
-	var count = 0
 	var visited = 0
 
-	for !exited && count < 60 {
+	for !exited {
 		// fmt.Println("current", grid[currentPos.y][currentPos.x])
 		var move = guardMoves[grid[currentPos.y][currentPos.x]]
 		var nextPos = move(currentPos)
 		// fmt.Println("next pos", nextPos, len(grid))
 		if nextPos.y < 0 || nextPos.y >= len(grid) || nextPos.x < 0 || nextPos.x >= len(grid[0]) {
 			fmt.Println("exiting")
-			exited = true
-			return visited
-		}
-
-		// fmt.Println("next", grid[nextPos.y][nextPos.x])
-		if grid[nextPos.y][nextPos.x] == "." || grid[nextPos.y][nextPos.x] == "X" {
-			grid[nextPos.y][nextPos.x] = grid[currentPos.y][currentPos.x]
 			grid[currentPos.y][currentPos.x] = "X"
-			currentPos = nextPos
+			visited++
+			exited = true
+		} else if grid[nextPos.y][nextPos.x] == "#" {
+			// var nextDirection = changeDirection(grid[currentPos.y][currentPos.x])
+			// fmt.Print("About to change direction from ", grid[currentPos.y][currentPos.x], " to ", nextDirection, "\n")
+			grid[currentPos.y][currentPos.x] = changeDirection(grid[currentPos.y][currentPos.x])
+		} else if grid[nextPos.y][nextPos.x] == "." || grid[nextPos.y][nextPos.x] == "X" {
 			if grid[nextPos.y][nextPos.x] != "X" {
 				visited++
 			}
-		} else if grid[nextPos.y][nextPos.x] == "#" {
-			var nextDirection = changeDirection(grid[currentPos.y][currentPos.x])
-			// fmt.Print("About to change direction from ", grid[currentPos.y][currentPos.x], " to ", nextDirection, "\n")
-			grid[currentPos.y][currentPos.x] = nextDirection
+			grid[nextPos.y][nextPos.x] = grid[currentPos.y][currentPos.x]
+			grid[currentPos.y][currentPos.x] = "X"
+			currentPos = nextPos
 		}
-		count++
 	}
 	return visited
 }
@@ -117,5 +113,6 @@ func main() {
 		}
 	}
 
-	fmt.Println(part1(grid))
+	fmt.Println(part1(grid)) //5444
+	// fmt.Println(grid)
 }
