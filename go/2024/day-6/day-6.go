@@ -6,18 +6,25 @@ import (
 	"strings"
 )
 
-// func has(slice []string, num string) bool {
-// 	for _, n := range slice {
-// 		if n == num {
-// 			return true
-// 		}
-// 	}
-// 	return false
-// }
-
 type Pos struct {
 	y int
 	x int
+}
+
+type Loop struct {
+	topLeft     Pos
+	topRight    Pos
+	bottomRight Pos
+	bottomLeft  Pos
+}
+
+func has(slice []Pos, pos Pos) bool {
+	for _, n := range slice {
+		if n.y == pos.y && n.x == pos.x {
+			return true
+		}
+	}
+	return false
 }
 
 var directions = []string{"^", "v", "<", ">"}
@@ -63,35 +70,58 @@ func startingPosition(grid [][]string) Pos {
 	return pos
 }
 
-func part1(grid [][]string) int {
+func calcPath(grid [][]string) ([][]string, []Pos) {
 	var currentPos = startingPosition(grid)
 	var exited = false
-	var visited = 0
+	var obstacles []Pos
 
 	for !exited {
-		// fmt.Println("current", grid[currentPos.y][currentPos.x])
 		var move = guardMoves[grid[currentPos.y][currentPos.x]]
 		var nextPos = move(currentPos)
-		// fmt.Println("next pos", nextPos, len(grid))
 		if nextPos.y < 0 || nextPos.y >= len(grid) || nextPos.x < 0 || nextPos.x >= len(grid[0]) {
 			fmt.Println("exiting")
 			grid[currentPos.y][currentPos.x] = "X"
-			visited++
 			exited = true
 		} else if grid[nextPos.y][nextPos.x] == "#" {
-			// var nextDirection = changeDirection(grid[currentPos.y][currentPos.x])
-			// fmt.Print("About to change direction from ", grid[currentPos.y][currentPos.x], " to ", nextDirection, "\n")
 			grid[currentPos.y][currentPos.x] = changeDirection(grid[currentPos.y][currentPos.x])
-		} else if grid[nextPos.y][nextPos.x] == "." || grid[nextPos.y][nextPos.x] == "X" {
-			if grid[nextPos.y][nextPos.x] != "X" {
-				visited++
+			if !has(obstacles, nextPos) {
+				obstacles = append(obstacles, nextPos)
 			}
+		} else if grid[nextPos.y][nextPos.x] == "." || grid[nextPos.y][nextPos.x] == "X" {
 			grid[nextPos.y][nextPos.x] = grid[currentPos.y][currentPos.x]
 			grid[currentPos.y][currentPos.x] = "X"
 			currentPos = nextPos
 		}
 	}
+	return grid, obstacles
+}
+
+func part1(path [][]string) int {
+	var visited = 0
+
+	for _, row := range path {
+		for _, char := range row {
+			if char == "X" {
+				visited++
+			}
+		}
+	}
 	return visited
+}
+
+func part2(path [][]string, obstacles []Pos) int {
+	fmt.Println(len((path)))
+
+	fmt.Println(obstacles)
+	for y := range path {
+		for x := range path[y] {
+			if has(obstacles, Pos{y: y, x: x}) {
+				fmt.Println(y, x)
+			}
+		}
+
+	}
+	return 0
 }
 
 func main() {
@@ -112,7 +142,9 @@ func main() {
 			grid = append(grid, row)
 		}
 	}
+	path, obstacles := calcPath(grid)
 
-	fmt.Println(part1(grid)) //5444
+	fmt.Println(part1(path)) //5444
+	fmt.Println(part2(path, obstacles))
 	// fmt.Println(grid)
 }
